@@ -8,6 +8,8 @@ module MiniTest
         Dir.glob(path).each {|test_suite| require test_suite}
 
         @options = options
+
+        MiniTest::Unit.class_eval{ alias :_run :run } if RUBY_VERSION == "1.9.2"
       end
 
       def report
