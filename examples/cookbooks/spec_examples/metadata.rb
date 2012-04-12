@@ -1,0 +1,5 @@
+maintainer        "Opscode, Inc."
+maintainer_email  "andrew@kotirisoftware.com"
+license           "MIT"
+description       "MiniTest::Spec examples for minitest-chef-handler"
+version           "0.1.0"
