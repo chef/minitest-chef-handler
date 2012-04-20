@@ -1,7 +1,11 @@
 require 'minitest-chef-handler/context'
+require 'minitest-chef-handler/resources'
 require 'minitest-chef-handler/unit'
 require 'minitest-chef-handler/spec'
 require 'minitest-chef-handler/runner'
+
+require 'minitest-chef-handler/assertions'
+require 'minitest-chef-handler/infections'
 
 module MiniTest
   module Chef

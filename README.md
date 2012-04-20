@@ -85,6 +85,20 @@ describe_recipe 'nginx:configuration' do
 end
 ```
 
+By including `MiniTest::Chef::Resources` and `MiniTest::Chef::Assertions` you
+can also make assertions like these:
+
+```ruby
+file("/etc/fstab").must_have(:mode, "644")
+package("less").must_be_installed
+service("chef-client").must_be_running
+```
+
+The resources supported are: `cron`, `directory`, `file`, `group`, `ifconfig`,
+`link`, `mount`, `package`, `service` and `user`.
+
+For example usage see the tests under the `examples/spec_examples` directory.
+
 ## Further configuration
 
 These are the options the handler accepts:

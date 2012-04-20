@@ -1,5 +1,6 @@
 #!/usr/bin/env rake
 require "bundler/gem_tasks"
+require "rake/testtask"
 
 desc 'Verify that nothing is broken against the simple solo example'
 task :test do
@@ -8,4 +9,9 @@ task :test do
   end
 end
 
-task :default => :test
+Rake::TestTask.new do |t|
+  t.name = 'spec'
+  t.pattern = 'spec/**/*_spec.rb'
+end
+
+task :default => [:spec, :test]

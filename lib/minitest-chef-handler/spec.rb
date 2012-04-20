@@ -3,7 +3,9 @@ module MiniTest
     require 'minitest/spec'
 
     class Spec < MiniTest::Spec
+      include Assertions
       include Context
+      include Resources
     end
 
     MiniTest::Spec.register_spec_type(/\Arecipe::/, MiniTest::Chef::Spec)
