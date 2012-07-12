@@ -15,5 +15,6 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency('minitest')
   gem.add_dependency('chef')
+  gem.add_dependency('ci_reporter')
   gem.add_development_dependency('rake')
 end
