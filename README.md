@@ -152,7 +152,7 @@ and be treated like any other error in the Chef execution.
 
 ## Chef server distribution
 
-The instructions abow have described how to use it in a Chef solo installation. If you want to distribute the handler to your Chef server check either the chef_handler cookbooks in the examples or [minitest-handler-cookbook](https://github.com/btm/minitest-handler-cookbook).
+The instructions above have described how to use it in a Chef solo installation. If you want to distribute the handler to your Chef server check either the chef_handler cookbooks in the examples or [minitest-handler-cookbook](https://github.com/btm/minitest-handler-cookbook).
 
 ## Copyright
 
