@@ -14,7 +14,15 @@ module MiniTest
           required_args.each do |arg|
             res.send(arg, options.first[arg])
           end
-          provider = ::Chef::Platform.provider_for_resource(res)
+
+          # in Chef 10.14.0 an additional argument was added to Chef::Platform.provider_for_resource
+          # so we check the version here and use it if it is available
+          if Gem::Version.new(::Chef::VERSION) < Gem::Version.new("10.14.0")
+            provider = ::Chef::Platform.provider_for_resource(res)
+          else
+            provider = ::Chef::Platform.provider_for_resource(res, :create)
+          end
+
           provider.load_current_resource
           provider.current_resource
         end
