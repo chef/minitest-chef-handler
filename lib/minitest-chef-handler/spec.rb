@@ -1,6 +1,7 @@
 module MiniTest
   module Chef
     require 'minitest/spec'
+    require 'minitest-chef-handler/assertions'
 
     class Spec < MiniTest::Spec
       include Assertions
