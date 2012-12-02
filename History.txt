@@ -1,3 +1,10 @@
+=== 0.6.4 / 12-02-2012
+
+* 1 bug fix:
+
+  * No longer directly include MiniTest::Assertions in order to avoid using the wrong mixins.
+    Resolves issue 34. Reported by Leif Madsen (@leifmadsen). Fix suggested by Andrew Crump (@acrmp).
+
 === 0.6.3 / 09-25-2012
 
 * 1 bug fix:

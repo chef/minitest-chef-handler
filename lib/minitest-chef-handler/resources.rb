@@ -35,10 +35,10 @@ module MiniTest
       register_resource(:mount, :device)
 
       ::Chef::Resource.class_eval do
-        include MiniTest::Assertions
         def with(attribute, values)
+          mt = Object.extend(MiniTest::Assertions)
           actual_values = resource_value(attribute)
-          assert_equal values, actual_values,
+          mt.assert_equal values, actual_values,
             "The #{resource_name} does not have the expected #{attribute}"
           self
         end

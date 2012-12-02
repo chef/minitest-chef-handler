@@ -2,7 +2,7 @@
 Gem::Specification.new do |gem|
   gem.authors       = ["David Calavera"]
   gem.email         = ["david.calavera@gmail.com"]
-  gem.description   = %q{Run Minitest suites as Chef report handlers}
+  gem.description   = %q{Run minitest suites after your Chef recipes to check the status of your system.}
   gem.summary       = %q{Run Minitest suites as Chef report handlers}
   gem.homepage      = ""
 
@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.name          = "minitest-chef-handler"
   gem.require_paths = ["lib"]
-  gem.version       = '0.6.3'
+  gem.version       = '0.6.4'
 
   gem.add_dependency('minitest')
   gem.add_dependency('chef')
