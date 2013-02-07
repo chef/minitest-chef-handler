@@ -39,7 +39,7 @@ module MiniTest
       #   cookbooks/foo/specs/install/*_spec.rb
       #
       def seen_recipes_paths
-        run_status.node.run_state[:seen_recipes].keys.map do |recipe_name|
+        used_recipe_names.map do |recipe_name|
           cookbook_name, recipe_short_name = ::Chef::Recipe.parse_recipe_name(recipe_name)
           base_path = ::Chef::Config[:cookbook_path]
 
@@ -54,6 +54,14 @@ module MiniTest
             [file_test_pattern, dir_test_pattern, file_spec_pattern, dir_spec_pattern]
           end.flatten
         end.flatten
+      end
+
+      def used_recipe_names
+        if recipes = run_status.node.run_state[:seen_recipes]
+          recipes.keys
+        else
+          run_status.node.run_list.select(&:recipe?).map(&:name)
+        end
       end
 
       # Internal - look for the right path to the cookbook given one or
