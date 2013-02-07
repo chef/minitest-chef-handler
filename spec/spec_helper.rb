@@ -1,6 +1,7 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require 'minitest/spec'
+require 'mocha/setup'
 
 require File.expand_path('../../lib/minitest-chef-handler', __FILE__)
 

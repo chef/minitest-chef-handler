@@ -11,7 +11,7 @@ module MiniTest
       def require_test_suites(options_path)
         paths = options_path || seen_recipes_paths
         Array(paths).each do |path|
-          Dir.glob(path).each {|test_suite| require test_suite}
+          Dir.glob(path).each { |test_suite| require File.expand_path(test_suite) }
         end
       end
 
