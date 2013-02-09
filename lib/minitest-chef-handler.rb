@@ -28,20 +28,20 @@ module MiniTest
 
         MiniTest::Unit.output = ::Chef::Log
 
-        if @options[:ci_reports]
+        runner = if @options[:ci_reports]
           ENV['CI_REPORTS'] = @options[:ci_reports]
-          runner = CIRunner.new(run_status)
+          CIRunner.new(run_status)
         else
-          runner = Runner.new(run_status)
+          Runner.new(run_status)
         end
 
-        if custom_runner?
+        result = if custom_runner?
           runner._run(miniunit_options)
         else
           runner.run(miniunit_options)
         end
 
-        if runner.failures.nonzero? || runner.errors.nonzero?
+        if result.nonzero?
           ::Chef::Client.when_run_completes_successfully do |run_status|
             error_msg = "MiniTest failed with #{runner.failures} failure(s) and #{runner.errors} error(s).\n"
             error_msg << runner.report.sort.join("\n")
