@@ -60,7 +60,8 @@ module MiniTest
         if recipes = run_status.node.run_state[:seen_recipes]
           recipes.keys
         else
-          run_status.node.run_list.select(&:recipe?).map(&:name)
+          # chef 11 - see http://docs.opscode.com/breaking_changes_chef_11.html#node-run-state-replaced
+          run_status.run_context.loaded_recipes
         end
       end
 
