@@ -87,7 +87,12 @@ can also make assertions like these:
 file("/etc/fstab").must_have(:mode, "644")
 package("less").must_be_installed
 service("chef-client").must_be_running
+assert_directory "/etc", "root", "root", "755"
+assert_file "/etc/fstab", "root", "root", "644"
+assert_sh "ls /etc"
+assert_logrotate "/etc/logrotate.d/mysql"
 ```
+and [many more](lib/minitest-chef-handler/assertions.rb)
 
 The resources supported are: `cron`, `directory`, `file`, `group`, `ifconfig`,
 `link`, `mount`, `package`, `service` and `user`.

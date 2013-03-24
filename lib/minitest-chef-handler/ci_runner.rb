@@ -1,4 +1,5 @@
 require 'ci/reporter/minitest'
+
 module MiniTest
   module Chef
     class CIRunner < CI::Reporter::Runner

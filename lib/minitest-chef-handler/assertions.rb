@@ -124,6 +124,57 @@ module MiniTest
         service
       end
 
+      def assert_directory(dir, *args)
+        assert File.directory?(dir), "Expected #{dir} is be a directory"
+        assert_acl(dir, *args)
+      end
+
+      def assert_file(file, *args)
+        assert File.file?(file), "Expected #{file} is be a file"
+        assert_acl(file, *args)
+      end
+
+      def assert_acl(file, owner, group, mode)
+        mode = mode.to_s(8) if mode.is_a?(Integer) # better diff since 0755 would be converted to 493
+        mode = mode.sub(/^0+/, "")
+
+        file_resource = file(file)
+        file_mode = file_resource.mode
+        file_mode = if file_mode.is_a?(Integer) # chef 10/11
+          file_mode.to_s(8)
+        else
+          file_mode.sub(/^0+/, "")
+        end
+
+        assert_equal owner, file_resource.owner, "Expected #{file} to have owner #{owner}, not #{file_resource.owner}"
+        assert_equal group, file_resource.group, "Expected #{file} to have group #{group}, not #{file_resource.group}"
+        assert_equal mode, file_mode, "Expected #{file} to have mode #{mode}, not #{file_mode}"
+      end
+
+      def assert_symlinked_file(file, *args)
+        assert File.symlink?(file), "Expected #{file} to be a symlink"
+        assert_acl file, *args
+        assert File.read(file, 1), "Expected #{file} to be linked to an existing file"
+      end
+
+      def assert_symlinked_directory(directory, *args)
+        assert File.symlink?(directory), "Expected #{directory} to be a symlink"
+        assert_acl directory, *args
+        assert_sh "ls #{directory}/", "Expected #{directory} to link to an existing directory"
+      end
+
+      def assert_logrotate(file)
+        assert_file file, "root", "root", 0644
+        assert_sh "logrotate -d #{file}", "Expected #{file} to pass logrotate validation"
+      end
+
+      def assert_sh(command, text=nil)
+        text ||= "Expected #{command} to succeed"
+        out = `#{command} 2>&1`
+        assert $?.success?, "#{text}, but failed with: #{out}"
+        out
+      end
+
     end
   end
 end

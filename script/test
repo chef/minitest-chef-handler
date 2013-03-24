@@ -23,6 +23,6 @@ test_all
 
 puts '-> Testing with Chef 11'
 
-ENV['BUNDLE_GEMFILE'] = File.expand_path('gemfile_chef_11', ROOT)
+ENV['BUNDLE_GEMFILE'] = File.expand_path('Gemfile', ROOT)
 
 test_all

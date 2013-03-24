@@ -1,9 +1,9 @@
 require 'minitest/autorun'
-require 'minitest/pride'
 require 'minitest/spec'
 require 'mocha/setup'
 
-require File.expand_path('../../lib/minitest-chef-handler', __FILE__)
+$LOAD_PATH << File.expand_path('../../lib', __FILE__)
+require "minitest-chef-handler"
 
 # Borrowed from MiniTest
 def assert_triggered(expected)
