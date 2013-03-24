@@ -6,15 +6,7 @@ require 'minitest/spec'
 # Copyright 2012, Opscode, Inc.
 #
 describe_recipe 'spec_examples::default' do
-
-  # It's often convenient to load these includes in a separate helper along with
-  # your own helper methods, but here we just include them directly:
-  include MiniTest::Chef::Assertions
-  include MiniTest::Chef::Context
-  include MiniTest::Chef::Resources
-
   describe "files" do
-
     # = Testing that a file exists =
     #
     # The simplest assertion is that a file exists following the Chef run:
@@ -61,6 +53,7 @@ describe_recipe 'spec_examples::default' do
     # You don't want to get too carried away doing this but it can be useful.
     it "only root can modify the config file" do
       file("/etc/fstab").must_have(:mode, "644").with(:owner, "root").and(:group, "root")
+      assert_file "/etc/fstab", "root", "root", 0644
     end
 
     # Alternatively you could express it like this so each assertion is nicely
@@ -98,19 +91,21 @@ describe_recipe 'spec_examples::default' do
 
     # The file existence and permissions matchers are also valid for
     # directories:
-    it { directory("/etc/").must_exist.with(:owner, "root") }
+    it "creates directories" do
+      directory("/etc/").must_exist.with(:owner, "root")
+      assert_directory "/etc", "root", "root", 0755
+    end
 
     # = Links =
 
     it "symlinks the foo in" do
       link("/tmp/foo-symbolic").must_exist.with(
         :link_type, :symbolic).and(:to, "/tmp/foo")
+      assert_symlinked_file "/tmp/foo-symbolic", "root", "root", 0600
     end
-
   end
 
   describe "packages" do
-
     # = Checking for package install =
     it "installs my favorite pager" do
       package("less").must_be_installed
@@ -136,26 +131,23 @@ describe_recipe 'spec_examples::default' do
 
     # = Package versions =
     it "installs the package with the right version" do
-      package("less").must_be_installed.with(:version, "436-1")
+      package("less").must_be_installed.with(:version, "444-1ubuntu1")
     end
   end
 
   describe "services" do
-
     # You can assert that a service must be running following the converge:
     it "runs as a daemon" do
-      service("chef-client").must_be_running
+      service("ntp").must_be_running
     end
 
     # And that it will start when the server boots:
     it "boots on startup" do
-      service("chef-client").must_be_enabled
+      service("ntp").must_be_enabled
     end
-
   end
 
   describe "users and groups" do
-
     # = Users =
 
     # Check if a user has been created:
@@ -198,7 +190,6 @@ describe_recipe 'spec_examples::default' do
   end
 
   describe "cron entries" do
-
     it "creates a crontab entry" do
       cron("noop").must_exist.with(:hour, "5").and(:minute, "0").and(:day, "*")
     end
@@ -206,7 +197,6 @@ describe_recipe 'spec_examples::default' do
     it "removes the self-destruct countdown" do
       cron("self-destruct").wont_exist
     end
-
   end
 
   # Note that the syntax for testing the mount resource is slightly different.
@@ -218,7 +208,6 @@ describe_recipe 'spec_examples::default' do
   end
 
   describe "networking" do
-
     # = Test network interface settings =
     describe "ifconfig" do
       it "has the expected network interfaces configured" do
@@ -226,7 +215,12 @@ describe_recipe 'spec_examples::default' do
         ifconfig(node['ipaddress'], :device => "eth1").wont_exist
       end
     end
-
   end
 
+  describe "misc" do
+    it "can run assert_sh" do
+      result = assert_sh("ls /vagrant")
+      assert_includes result, "Gemfile"
+    end
+  end
 end

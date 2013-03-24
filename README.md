@@ -4,18 +4,27 @@ Run minitest suites after your Chef recipes to check the status of your system.
 
 # Installation
 
-```
-$ gem install minitest-chef-handler
+```Bash
+gem install minitest-chef-handler
 ```
 
 ## Usage
 
-Add the report handler to your client.rb or solo.rb file:
+Option 1: Add the report handler to your client.rb or solo.rb file:
 
 ```ruby
 require 'minitest-chef-handler'
 
 report_handlers << MiniTest::Chef::Handler.new
+```
+
+Options 2: Using [minitest-handler](https://github.com/btm/minitest-handler-cookbook)
+```Ruby
+# Vagrantfile
+chef.run_list = [
+  "minitest-handler",
+  "recipe[your-recipes]"
+]
 ```
 
 ### Test cases
@@ -161,20 +170,10 @@ The instructions above have described how to use it in a Chef solo installation.
 
 ## Development
 
-Minitest-chef-handler should work with versions 10.x and versions 11.x of Chef.
-
-There are just two commands that you need to know to hack on this library.
-
-1. Load both versions of Chef dependencies:
-
-```
-$ script/bootstrap
-```
-
-2. Run unit and integration tests agains both versions of Chef:
-
-```
-$ script/test
+```Ruby
+bundle
+bundle exec rake # unit tests
+bundle exec vagrant up # integration tests (install virtualbox first and vagrant destroy -f afterwards to clean up)
 ```
 
 ## Copyright

@@ -1,2 +1,3 @@
 source "https://rubygems.org"
 gemspec
+gem "vagrant", ">= 1.1", :git => "git://github.com/mitchellh/vagrant.git", :ref => "11ad0392758b6b3f4b8a44332c66a79e94cef1eb" # current master has some network issues ...
