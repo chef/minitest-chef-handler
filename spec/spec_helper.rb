@@ -13,5 +13,9 @@ def assert_triggered(expected)
   msg = e.message.sub(/(---Backtrace---).*/m, '\1')
   msg.gsub!(/\(oid=[-0-9]+\)/, '(oid=N)')
 
-  assert_match expected, msg
+  if expected.is_a?(String)
+    assert_includes msg, expected
+  else
+    assert_match expected, msg
+  end
 end

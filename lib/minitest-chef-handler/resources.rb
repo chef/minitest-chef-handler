@@ -35,11 +35,17 @@ module MiniTest
       register_resource(:mount, :device)
 
       ::Chef::Resource.class_eval do
-        def with(attribute, values)
+        def with(attribute, values, failure_message=nil)
           mt = Object.extend(MiniTest::Assertions)
           actual_values = resource_value(attribute)
-          mt.assert_equal values, actual_values,
-            "The #{resource_name} does not have the expected #{attribute}"
+          details = " #{path}" if respond_to?(:path)
+
+          failure_message ||= "The #{resource_name}#{details} does not have the expected #{attribute}"
+          if attribute == :mode
+            values = values.to_s(8) if values.is_a?(Integer) # better diff since 0755 would be shown as 493
+            values = values.to_s.sub(/^0+/, "") # better diff, ignore leading zeros
+          end
+          mt.assert_equal values, actual_values, failure_message
           self
         end
 
@@ -52,7 +58,7 @@ module MiniTest
           case attribute
             when :mode
               return nil unless mode
-              mode.kind_of?(Integer) ? mode.to_s(8) : mode.to_s
+              mode.kind_of?(Integer) ? mode.to_s(8) : mode.to_s.sub(/^0+/, "")
             when :owner || :user
               return nil unless owner
               owner.is_a?(Integer) ? Etc.getpwuid(owner).name : Etc.getpwnam(owner).name

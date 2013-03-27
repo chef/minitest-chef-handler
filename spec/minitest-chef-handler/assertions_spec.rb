@@ -1,8 +1,13 @@
 require File.expand_path('../../spec_helper', __FILE__)
+require "minitest-chef-handler/resources"
 
 describe MiniTest::Chef::Assertions do
-
   include MiniTest::Chef::Assertions
+
+  before do
+    Etc.stubs(:getpwnam).returns stub(:name => "me")
+    Etc.stubs(:getgrnam).returns stub(:name => "family")
+  end
 
   def resource_for(hash)
     Class.new do
@@ -10,6 +15,14 @@ describe MiniTest::Chef::Assertions do
         define_method(key) { value }
       end
     end.new
+  end
+
+  def file(path)
+    file = ::Chef::Resource::File.new(path)
+    def file.mode; 0755;end
+    def file.owner; "xxx";end
+    def file.group; "xxx";end
+    file
   end
 
   module MiniTest::Chef::Assertions
@@ -305,40 +318,30 @@ describe MiniTest::Chef::Assertions do
   end
 
   describe "#assert_acl" do
-    def file(path)
-      resource_for(:mode => 0755, :owner => "me", :group => "family", :path => path)
-    end
-
     it "does not blow up if everything is correct" do
       assert_acl("/etc", "me", "family", 0755)
-      assert_acl("/etc", "me", "family", "755")
-      assert_acl("/etc", "me", "family", "0755")
     end
 
     it "verifies that it has the correct owner" do
-      assert_triggered "Expected /etc to have owner foo, not me" do
+      assert_triggered "The file /etc does not have the expected owner.\nExpected: \"foo\"\n  Actual: \"me\"" do
         assert_acl("/etc", "foo", "bar", 0755)
       end
     end
 
     it "verifies that it has the correct group" do
-      assert_triggered "Expected /etc to have group bar, not family" do
+      assert_triggered "The file /etc does not have the expected group.\nExpected: \"bar\"\n  Actual: \"family\"" do
         assert_acl("/etc", "me", "bar", 0755)
       end
     end
 
     it "verifies that it has the correct mode" do
-      assert_triggered "Expected /etc to have mode 750, not 755" do
+      assert_triggered "The file /etc does not have the expected mode.\nExpected: \"750\"\n  Actual: \"755\"" do
         assert_acl("/etc", "me", "family", 0750)
       end
     end
   end
 
   describe "#assert_directory" do
-    def file(path)
-      resource_for(:mode => 0755, :owner => "me", :group => "family", :path => path)
-    end
-
     it "does not blow up if everything is correct" do
       assert_directory("/etc", "me", "family", 0755)
     end
@@ -350,17 +353,13 @@ describe MiniTest::Chef::Assertions do
     end
 
     it "verifies that it has the correct acl" do
-      assert_triggered "Expected /etc to have owner foo, not me" do
+      assert_triggered "The file /etc does not have the expected owner.\nExpected: \"foo\"\n  Actual: \"me\"" do
         assert_directory("/etc", "foo", "bar", 0755)
       end
     end
   end
 
   describe "#assert_file" do
-    def file(path)
-      resource_for(:mode => 0755, :owner => "me", :group => "family", :path => path)
-    end
-
     it "does not blow up if everything is correct" do
       assert_file("/etc/foo", "me", "family", 0755)
     end
@@ -372,17 +371,13 @@ describe MiniTest::Chef::Assertions do
     end
 
     it "verifies that it has the correct acl" do
-      assert_triggered "Expected /etc/foo to have owner foo, not me" do
+      assert_triggered "The file /etc/foo does not have the expected owner.\nExpected: \"foo\"\n  Actual: \"me\"" do
         assert_file("/etc/foo", "foo", "bar", 0755)
       end
     end
   end
 
   describe "#assert_symlinked_file" do
-    def file(path)
-      resource_for(:mode => 0755, :owner => "me", :group => "family", :path => path)
-    end
-
     it "does not blow up if everything is correct" do
       assert_symlinked_file("/etc/baz", "me", "family", 0755)
     end
@@ -394,17 +389,13 @@ describe MiniTest::Chef::Assertions do
     end
 
     it "verifies that it has the correct acl" do
-      assert_triggered "Expected /etc/baz to have owner foo, not me" do
+      assert_triggered "The file /etc/baz does not have the expected owner.\nExpected: \"foo\"\n  Actual: \"me\"" do
         assert_symlinked_file("/etc/baz", "foo", "bar", 0755)
       end
     end
   end
 
   describe "#assert_symlinked_directory" do
-    def file(path)
-      resource_for(:mode => 0755, :owner => "me", :group => "family", :path => path)
-    end
-
     def assert_sh(*args)
     end
 
@@ -419,21 +410,25 @@ describe MiniTest::Chef::Assertions do
     end
 
     it "verifies that it has the correct acl" do
-      assert_triggered "Expected /etc/gar to have owner foo, not me" do
+      assert_triggered "The file /etc/gar does not have the expected owner.\nExpected: \"foo\"\n  Actual: \"me\"" do
         assert_symlinked_directory("/etc/gar", "foo", "bar", 0755)
       end
     end
   end
 
   describe "#assert_logrotate" do
-    def file(path)
-      resource_for(:mode => 0644, :owner => "root", :group => "root", :path => path)
-    end
-
     def assert_sh(*args)
     end
 
+    def file(path)
+      file = super
+      def file.mode; 0644;end
+      file
+    end
+
     it "does not blow up if everything is correct" do
+      Etc.stubs(:getpwnam).returns stub(:name => "root")
+      Etc.stubs(:getgrnam).returns stub(:name => "root")
       assert_logrotate("/etc/foo")
     end
   end

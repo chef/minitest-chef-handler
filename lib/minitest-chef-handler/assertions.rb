@@ -135,32 +135,22 @@ module MiniTest
       end
 
       def assert_acl(file, owner, group, mode)
-        mode = mode.to_s(8) if mode.is_a?(Integer) # better diff since 0755 would be converted to 493
-        mode = mode.sub(/^0+/, "")
-
-        file_resource = file(file)
-        file_mode = file_resource.mode
-        file_mode = if file_mode.is_a?(Integer) # chef 10/11
-          file_mode.to_s(8)
-        else
-          file_mode.sub(/^0+/, "")
-        end
-
-        assert_equal owner, file_resource.owner, "Expected #{file} to have owner #{owner}, not #{file_resource.owner}"
-        assert_equal group, file_resource.group, "Expected #{file} to have group #{group}, not #{file_resource.group}"
-        assert_equal mode, file_mode, "Expected #{file} to have mode #{mode}, not #{file_mode}"
+        file(file).
+          must_have(:owner, owner).
+          must_have(:group, group).
+          must_have(:mode, mode)
       end
 
       def assert_symlinked_file(file, *args)
         assert File.symlink?(file), "Expected #{file} to be a symlink"
-        assert_acl file, *args
         assert File.read(file, 1), "Expected #{file} to be linked to an existing file"
+        assert_acl file, *args
       end
 
       def assert_symlinked_directory(directory, *args)
         assert File.symlink?(directory), "Expected #{directory} to be a symlink"
-        assert_acl directory, *args
         assert_sh "ls #{directory}/", "Expected #{directory} to link to an existing directory"
+        assert_acl directory, *args
       end
 
       def assert_logrotate(file)
