@@ -1,3 +1,5 @@
+require 'set'
+
 module MiniTest
   module Chef
     module Assertions
@@ -33,14 +35,16 @@ module MiniTest
       end
 
       def assert_group_includes(members, group)
-        members = [members] unless members.respond_to?(:&)
-        assert group.members & members == members, "Expected group '#{group.name}' to include members: #{members.join(', ')}"
+        members = Set.new(Array(members))
+        assert Set.new(group.members) & members == members,
+          "Expected group '#{group.name}' to include members: #{members.to_a.join(', ')}"
         group
       end
 
       def refute_group_includes(members, group)
-        members = [members] unless members.respond_to?(:&)
-        refute group.members & members == members, "Expected group '#{group.name}' not to include members: #{members.join(', ')}"
+        members = Set.new(Array(members))
+        refute Set.new(group.members) & members == members,
+          "Expected group '#{group.name}' not to include members: #{members.to_a.join(', ')}"
         group
       end
 

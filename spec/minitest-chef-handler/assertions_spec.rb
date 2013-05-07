@@ -187,6 +187,22 @@ describe MiniTest::Chef::Assertions do
     end
   end
 
+  it "ignores order when asserting group membership" do
+    group = resource_for({:name => 'foo', :members => ['bar', 'baz']})
+    assert_group_includes(['bar', 'baz'], group).must_equal group
+    assert_group_includes(['baz', 'bar'], group).must_equal group
+  end
+
+  it "ignores order when refuting group membership" do
+    group = resource_for({:name => 'foo', :members => ['bar', 'baz']})
+    assert_triggered "Expected group 'foo' not to include members: bar, baz" do
+      refute_group_includes(['bar', 'baz'], group).must_equal group
+    end
+    assert_triggered "Expected group 'foo' not to include members: baz, bar" do
+      refute_group_includes(['baz', 'bar'], group).must_equal group
+    end
+  end
+
   it "verifies that a file includes the specified content" do
     file = resource_for({:path => '/etc/bar'})
     assert_includes_content(file, 'Chef').must_equal file
