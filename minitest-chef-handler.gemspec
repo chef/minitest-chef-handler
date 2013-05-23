@@ -22,5 +22,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "ffi", ">= 1"
   gem.add_development_dependency "vagrant", ">= 1.1"
   gem.add_development_dependency "berkshelf", ">= 1.3.1"
-  gem.add_development_dependency "berkshelf-vagrant"
+  gem.add_development_dependency "vagrant-berkshelf"
 end
