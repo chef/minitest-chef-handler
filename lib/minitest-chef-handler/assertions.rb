@@ -129,12 +129,12 @@ module MiniTest
       end
 
       def assert_directory(dir, *args)
-        assert File.directory?(dir), "Expected #{dir} is be a directory"
+        assert File.directory?(dir), "Expected #{dir} to be a directory"
         assert_acl(dir, *args)
       end
 
       def assert_file(file, *args)
-        assert File.file?(file), "Expected #{file} is be a file"
+        assert File.file?(file), "Expected #{file} to be a file"
         assert_acl(file, *args)
       end
 

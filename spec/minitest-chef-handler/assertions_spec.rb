@@ -363,7 +363,7 @@ describe MiniTest::Chef::Assertions do
     end
 
     it "verifies that it is a directory" do
-      assert_triggered "Expected /etc/foo is be a directory" do
+      assert_triggered "Expected /etc/foo to be a directory" do
         assert_directory("/etc/foo", "foo", "bar", 0755)
       end
     end
@@ -381,7 +381,7 @@ describe MiniTest::Chef::Assertions do
     end
 
     it "verifies that it is a file" do
-      assert_triggered "Expected /etc is be a file" do
+      assert_triggered "Expected /etc to be a file" do
         assert_file("/etc", "foo", "bar", 0755)
       end
     end
