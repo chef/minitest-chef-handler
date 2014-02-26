@@ -169,6 +169,10 @@ describe_recipe 'spec_examples::default' do
       user("root").must_have(:uid, 0)
     end
 
+    it "has the expected gid" do
+      user("root").must_have(:gid, 0)
+    end
+
     # = Groups =
 
     it "creates the users group" do
