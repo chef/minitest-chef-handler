@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency('minitest', '~> 4.7.3')
   gem.add_dependency('chef', '>= 10.12.0')
-  gem.add_dependency('ci_reporter')
+  gem.add_dependency('ci_reporter', '< 2.0')
   gem.add_development_dependency "rake"
   gem.add_development_dependency "mocha"
   gem.add_development_dependency "appraisal"
