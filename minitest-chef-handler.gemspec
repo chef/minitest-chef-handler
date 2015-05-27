@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.version       = '1.0.2'
 
   gem.add_dependency('minitest', '~> 4.7.3')
-  gem.add_dependency('chef', '>= 10.12.0')
+  gem.add_dependency('chef', '~> 11.0')
   gem.add_dependency('ci_reporter')
   gem.add_development_dependency "rake"
   gem.add_development_dependency "mocha"
