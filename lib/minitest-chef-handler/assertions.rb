@@ -171,14 +171,14 @@ module MiniTest
 
       def assert_sh(command, text=nil)
         text ||= "Expected #{command} to succeed"
-        out = `#{command} 2>&1`
+        out = `#{command.strip} 2>&1`
         assert $?.success?, "#{text}, but failed with: #{out}"
         out
       end
 
       def refute_sh(command, text=nil)
         text ||= "Expected #{command} not to succeed"
-        out = `#{command} 2>&1`
+        out = `#{command.strip} 2>&1`
         assert !$?.success?, "#{text}, but succeeded with: #{out}"
         out
       end
