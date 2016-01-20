@@ -475,7 +475,7 @@ describe MiniTest::Chef::Assertions do
     end
 
     it "fails when the command succeeds" do
-      assert_triggered "Expected true not to succeed, but succeeded with: ABC" do
+      assert_triggered "Expected echo ABC && true not to succeed, but succeeded with: ABC" do
         refute_sh("echo ABC && true")
       end
     end
