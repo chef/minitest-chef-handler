@@ -25,6 +25,14 @@ describe MiniTest::Chef::Assertions do
     file
   end
 
+  def directory(path)
+    directory = ::Chef::Resource::Directory.new(path)
+    def directory.mode; 0755;end
+    def directory.owner; "xxx";end
+    def directory.group; "xxx";end
+    directory
+  end
+
   module MiniTest::Chef::Assertions
     class File
       def self.read(path, to=-1)
@@ -339,19 +347,19 @@ describe MiniTest::Chef::Assertions do
     end
 
     it "verifies that it has the correct owner" do
-      assert_triggered "The file /etc does not have the expected owner.\nExpected: \"foo\"\n  Actual: \"me\"" do
+      assert_triggered "The directory /etc does not have the expected owner.\nExpected: \"foo\"\n  Actual: \"me\"" do
         assert_acl("/etc", "foo", "bar", 0755)
       end
     end
 
     it "verifies that it has the correct group" do
-      assert_triggered "The file /etc does not have the expected group.\nExpected: \"bar\"\n  Actual: \"family\"" do
+      assert_triggered "The directory /etc does not have the expected group.\nExpected: \"bar\"\n  Actual: \"family\"" do
         assert_acl("/etc", "me", "bar", 0755)
       end
     end
 
     it "verifies that it has the correct mode" do
-      assert_triggered "The file /etc does not have the expected mode.\nExpected: \"750\"\n  Actual: \"755\"" do
+      assert_triggered "The directory /etc does not have the expected mode.\nExpected: \"750\"\n  Actual: \"755\"" do
         assert_acl("/etc", "me", "family", 0750)
       end
     end
@@ -369,7 +377,7 @@ describe MiniTest::Chef::Assertions do
     end
 
     it "verifies that it has the correct acl" do
-      assert_triggered "The file /etc does not have the expected owner.\nExpected: \"foo\"\n  Actual: \"me\"" do
+      assert_triggered "The directory /etc does not have the expected owner.\nExpected: \"foo\"\n  Actual: \"me\"" do
         assert_directory("/etc", "foo", "bar", 0755)
       end
     end
@@ -426,7 +434,7 @@ describe MiniTest::Chef::Assertions do
     end
 
     it "verifies that it has the correct acl" do
-      assert_triggered "The file /etc/gar does not have the expected owner.\nExpected: \"foo\"\n  Actual: \"me\"" do
+      assert_triggered "The directory /etc/gar does not have the expected owner.\nExpected: \"foo\"\n  Actual: \"me\"" do
         assert_symlinked_directory("/etc/gar", "foo", "bar", 0755)
       end
     end
